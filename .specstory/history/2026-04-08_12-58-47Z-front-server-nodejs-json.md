@@ -4203,3 +4203,59 @@ _**Agent (claude-opus-4-6 2026-04-08 13:54:37Z)**_
 - **`front/README.md`** — 重写得更准确：技术栈、目录结构（含 `common/featured-quotes` 划分）、命令、vite 代理、设计约定（组件纯展示原则、px→vw、别名等）
 
 ⚠️ 顺手提一下：根目录还有个空的 `server/` 目录（之前残留），可以删掉避免混淆。要我删吗？
+
+---
+
+_**User (2026-04-08 13:57:42Z)**_
+
+$ git push -u origin main
+warning: ----------------- SECURITY WARNING ----------------
+warning: | TLS certificate verification has been disabled! |
+warning: ---------------------------------------------------
+warning: HTTPS connections may not be secure. See https://aka.ms/gcm/tlsverify for more information.
+warning: ----------------- SECURITY WARNING ----------------
+warning: | TLS certificate verification has been disabled! |
+warning: ---------------------------------------------------
+warning: HTTPS connections may not be secure. See https://aka.ms/gcm/tlsverify for more information.
+remote: Invalid username or token. Password authentication is not supported for Git operations.
+fatal: Authentication failed for 'https://github.com/zhengbooleen-cloud/demo.git/'
+
+
+---
+
+_**Agent (claude-opus-4-6 2026-04-08 13:57:54Z)**_
+
+GitHub 早就不支持密码认证了，需要用 Personal Access Token (PAT) 或 SSH。两种方案：
+
+**方案 A：用 PAT（最快）**
+
+1. 去 https://github.com/settings/tokens 生成一个 token，勾选 `repo` 权限
+2. 重新 push，用户名填 GitHub 用户名，密码填 token：
+   ```bash
+   git push -u origin main
+   ```
+3. 想让它记住，用 credential helper：
+   ```bash
+   git config --global credential.helper manager
+   ```
+   （Git for Windows 自带 Git Credential Manager，下次会弹浏览器登录，无需手动贴 token）
+
+**方案 B：改用 SSH（推荐长期使用）**
+
+```bash
+# 1. 生成密钥（如果还没有）
+ssh-keygen -t ed25519 -C "zhengbooleen@gmail.com"
+
+# 2. 复制公钥
+cat ~/.ssh/id_ed25519.pub
+```
+把公钥粘到 https://github.com/settings/keys ，然后改 remote：
+```bash
+git remote set-url origin git@github.com:zhengbooleen-cloud/demo.git
+git push -u origin main
+```
+
+另外那个 **TLS 证书验证被禁用** 的警告也要注意——你之前可能跑过 `git config --global http.sslVerify false`，建议恢复：
+```bash
+git config --global --unset http.sslVerify
+```

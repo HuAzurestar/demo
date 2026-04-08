@@ -77,7 +77,3 @@ proxy: {
 ## 主题
 
 只支持亮色模式（`@/assets/style/theme/light.css`）。
-
-## 私有 NPM 源
-
-依赖中包含内部包（`@atom`、`@ths-m` 等），需配置私有 NPM 源后再 `pnpm install`。
