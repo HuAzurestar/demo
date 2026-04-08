@@ -1,10 +1,4 @@
 import { INTEGER_2 } from '@/utils/constant';
-import { ErrorReportParam } from '@/types/tools.d';
-
-// 错误上报
-const errorReport = ({ name, message, stack }: ErrorReportParam) => {
-  console.error('[errorReport]', name, message, stack);
-};
 
 // 判断是否是有效值
 const judgeIsNull = (val: any) => {
@@ -42,7 +36,6 @@ const mathFormatHandler = function (value: any, format: string) {
 };
 
 export {
-  errorReport,
   judgeIsNull,
   mathFormatHandler,
 };

@@ -7,7 +7,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-./front/node_modules
 
 ./front/pnpm-lock.yaml
 ./java-server/target

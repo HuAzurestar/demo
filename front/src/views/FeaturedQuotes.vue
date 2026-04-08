@@ -15,7 +15,6 @@ import { ref, computed, onMounted, getCurrentInstance } from 'vue';
 import BoardCard from '@c/common/BoardCard.vue';
 import StockList from '@c/featured-quotes/dark-board/StockList.vue';
 import { marketApi } from '@/apis/market';
-import { errorReport } from '@/utils/tools';
 import { jumpToFenShi } from '@/utils/jump';
 import type { GreyRankStockItem } from '@/types/market';
 
@@ -30,11 +29,7 @@ const fetchBoard = async () => {
     const { data } = await marketApi.getDarkPlateBoard('');
     stocks.value = data?.stock_list || [];
   } catch (error) {
-    errorReport({
-      name: 'FeaturedQuotes|获取暗盘榜数据失败',
-      message: (error as Error).message,
-      stack: (error as Error)?.stack || ''
-    });
+    console.error('FeaturedQuotes|获取暗盘榜数据失败', error);
   } finally {
     loading.value = false;
     proxy.$pageStatus.close();

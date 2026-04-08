@@ -96,8 +96,8 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
       ],
       // 设置代理，根据我们项目实际情况配置
       proxy: {
-        '/api': {
-          target: 'http://127.0.0.1:3000',
+        '/indicator': {
+          target: 'http://127.0.0.1:80',
           changeOrigin: true,
           secure: false
         }

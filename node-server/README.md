@@ -9,7 +9,7 @@ cd node-server
 npm start
 ```
 
-默认监听 `3000` 端口，可通过环境变量覆盖：
+默认监听 `80` 端口，可通过环境变量覆盖：
 
 ```bash
 PORT=4000 npm start
@@ -17,7 +17,7 @@ PORT=4000 npm start
 
 ## 接口
 
-### `GET /api/data`
+### `GET /indicator/capital/v1/grey_rank`
 
 读取并返回 `data.json` 的内容。修改 `data.json` 后下次请求即可生效，**无需重启**。
 
