@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "author": "wangjian6@myhexin.com",
   "scripts": {
-    "dev": "vite --mode dev",
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation vite --mode dev",
     "release": "vite build --mode release",
     "testing": "vite build --mode test",
     "preview": "vite preview",
@@ -26,6 +26,7 @@
     "@vitejs/plugin-legacy": "^4.1.0",
     "@vitejs/plugin-vue2": "^2.1.0",
     "autoprefixer": "^10.4.8",
+    "cross-env": "^10.1.0",
     "eslint": "^8.23.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
