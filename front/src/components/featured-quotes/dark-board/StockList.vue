@@ -3,7 +3,7 @@
     <rank-item
       v-for="(stock, index) in data"
       :key="stock.stock_code"
-      :rank="index"
+      :rank="formatRank(stock, index)"
       :title="stock.stock_name"
       @click="$emit('item-click', stock)"
     >
@@ -19,6 +19,10 @@
           <span class="stock-list__value ff-din" v-redGreen="stock.main_listed_capital">
             {{ formatWan(stock.main_listed_capital) }}
           </span>
+        </div>
+        <div class="stock-list__cell">
+          <span class="stock-list__label">占比(%)</span>
+          <span class="stock-list__value ff-din">{{ formatRatioPct(stock.ratio_pct) }}</span>
         </div>
       </template>
     </rank-item>
@@ -44,6 +48,18 @@ const formatWan = (value: number | null) => {
   if (value === null) return '--';
   const sign = value > 0 ? '+' : '';
   return `${sign}${(value / INTEGER_10000).toFixed(INTEGER_2)}`;
+};
+
+const formatRatioPct = (value: number | null | undefined) => {
+  if (value == null || !Number.isFinite(value)) return '--';
+  return value.toFixed(INTEGER_2);
+};
+
+const formatRank = (stock: GreyRankStockItem, fallbackIndex: number) => {
+  if (typeof stock.index === 'number' && stock.index > 0) {
+    return stock.index - 1;
+  }
+  return fallbackIndex;
 };
 </script>
 

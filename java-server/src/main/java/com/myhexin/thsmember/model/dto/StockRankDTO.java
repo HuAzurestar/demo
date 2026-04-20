@@ -23,6 +23,10 @@ public class StockRankDTO {
     @JsonProperty("change_pct")
     private Double changePct;
     private Double zf;
+    /** main_listed_capital / turnover * 100，保留两位小数；非法时为 null */
+    @JsonProperty("ratio_pct")
+    private Double ratioPct;
+    private Integer index;
 
     // Getters and Setters
     public String getStockCode() { return stockCode; }
@@ -45,4 +49,8 @@ public class StockRankDTO {
     public void setChangePct(Double changePct) { this.changePct = changePct; }
     public Double getZf() { return zf; }
     public void setZf(Double zf) { this.zf = zf; }
+    public Double getRatioPct() { return ratioPct; }
+    public void setRatioPct(Double ratioPct) { this.ratioPct = ratioPct; }
+    public Integer getIndex() { return index; }
+    public void setIndex(Integer index) { this.index = index; }
 }

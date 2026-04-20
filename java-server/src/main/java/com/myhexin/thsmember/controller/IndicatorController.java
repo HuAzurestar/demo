@@ -20,7 +20,10 @@ public class IndicatorController {
     private IndicatorService indicatorService;
 
     @GetMapping("/grey_rank")
-    public ResultDTO<IndicatorRankData> getGreyRank(@RequestParam(required = false) String date) {
-        return ResultDTO.success(indicatorService.getIndicatorRankings(date));
+    public ResultDTO<IndicatorRankData> getGreyRank(
+            @RequestParam(required = false) String date,
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "20") Integer pageSize) {
+        return ResultDTO.success(indicatorService.getIndicatorRankings(date, pageNum, pageSize));
     }
 }
