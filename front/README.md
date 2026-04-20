@@ -55,16 +55,20 @@ pnpm lint           # eslint --fix
 
 ## 接口与代理
 
-接口走统一的 `@/apis/http`（axios 实例），错误统一上报。本地开发时，vite 把 `/api` 代理到本仓库的 `node-server`：
+接口走统一的 `@/apis/http`（axios 实例），错误统一上报。本地开发时，vite 把 **`/indicator`** 代理到 `http://127.0.0.1:80`（与 `vite.config.ts` 一致）：
 
 ```ts
-// vite.config.ts
+// vite.config.ts（节选）
 proxy: {
-  '/api': { target: 'http://127.0.0.1:3000', changeOrigin: true }
+  '/indicator': {
+    target: 'http://127.0.0.1:80',
+    changeOrigin: true,
+    secure: false
+  }
 }
 ```
 
-启动前端前先启动 `node-server`，详见根目录 README。
+启动前端前请先在 **80** 端口启动 **`node-server`（mock）** 或 **`java-server`**，详见根目录 README。
 
 ## 设计约定
 

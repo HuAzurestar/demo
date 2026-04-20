@@ -10,7 +10,7 @@ demo (chargeBaseVip) — a Vue 2.7 + Vite 4 + TypeScript mobile H5 for the 同�
 
 ```bash
 pnpm install            # install (uses internal @atom / @king-fisher / @ths-m registries on miniapp.10jqka.com.cn)
-pnpm run dev            # vite --mode dev      (server: 127.0.0.1:8080, /api proxied to 127.0.0.1:5000)
+pnpm run dev            # vite --mode dev      (server: 127.0.0.1:8080; /indicator proxied to 127.0.0.1:80 for node-server or java-server)
 pnpm run testing        # vite build --mode test
 pnpm run release        # vite build --mode release  (production build)
 pnpm run lint           # eslint --fix

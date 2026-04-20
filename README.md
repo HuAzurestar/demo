@@ -26,7 +26,7 @@
 ## 快速开始
 
 ```bash
-# 1. 启动 mock 服务（默认 3000 端口）
+# 1. 启动 mock 服务（默认 80 端口）
 cd node-server
 npm start
 
@@ -36,4 +36,4 @@ pnpm install
 pnpm dev
 ```
 
-前端通过 vite 代理 `/api` 到 `http://127.0.0.1:3000`，由 `node-server` 返回 `data.json` 中的数据。
+本地开发时，`pnpm dev` 下 Vite 将请求路径 `/indicator` 代理到 `http://127.0.0.1:80`。在该端口启动 **`node-server`（mock）** 或 **`java-server`** 均可；二者接口路径一致，**同一时间只需运行其中一个**。在 Windows 上监听 80 端口可能需要**以管理员身份**运行终端，若无法绑定可改用环境变量指定其它端口（并同步修改 `java-server` 的 `application.yml` 与 `front/vite.config.ts` 中的代理地址）。
