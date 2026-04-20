@@ -13,3 +13,7 @@ lerna-debug.log*
 java-server/target/
 .idea
 .specstory
+
+# Frontend auto-generated type declarations
+front/src/types/auto-imports.d.ts
+front/src/types/components.d.ts
