@@ -28,7 +28,9 @@ public class IndicatorServiceImpl implements IndicatorService {
         }
 
         IndicatorRankData data = new IndicatorRankData();
-        data.setStockList(loadStocks(targetDate));
+        List<StockRankDTO> stocks = loadStocks(targetDate);
+        enrichRatioAndSortStocks(stocks);
+        data.setStockList(stocks);
         data.setBlockList(loadBlocks(targetDate));
         data.setUpdateTime(loadMetadata(targetDate));
         return data;
@@ -71,6 +73,30 @@ public class IndicatorServiceImpl implements IndicatorService {
             e.printStackTrace();
         }
         return stocks;
+    }
+
+    private void enrichRatioAndSortStocks(List<StockRankDTO> stocks) {
+        for (StockRankDTO s : stocks) {
+            s.setRatioPct(computeRatioPct(s.getMainListedCapital(), s.getTurnover()));
+        }
+        stocks.sort((a, b) -> {
+            Double ta = a.getTurnover();
+            Double tb = b.getTurnover();
+            if (ta == null && tb == null) return 0;
+            if (ta == null) return 1;
+            if (tb == null) return -1;
+            return Double.compare(tb, ta);
+        });
+    }
+
+    /** 占比 = main_listed_capital / turnover * 100，两位小数 */
+    private Double computeRatioPct(Double mainListedCapital, Double turnover) {
+        if (mainListedCapital == null || turnover == null) return null;
+        if (!Double.isFinite(mainListedCapital) || !Double.isFinite(turnover)) return null;
+        if (turnover == 0.0) return null;
+        double raw = mainListedCapital / turnover * 100.0;
+        if (!Double.isFinite(raw)) return null;
+        return Math.round(raw * 100.0) / 100.0;
     }
 
     private List<BlockRankDTO> loadBlocks(String date) {

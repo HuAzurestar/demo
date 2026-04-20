@@ -27,10 +27,11 @@ public class IndicatorControllerTest {
                 .andExpect(jsonPath("$.data.stock_list", hasSize(greaterThan(0))))
                 .andExpect(jsonPath("$.data.block_list", hasSize(greaterThan(0))))
                 .andExpect(jsonPath("$.data.update_time").exists())
-                // Verify specific stock data mapping
-                .andExpect(jsonPath("$.data.stock_list[0].stock_code").value("002195"))
-                .andExpect(jsonPath("$.data.stock_list[0].change_pct").value(22.67))
-                .andExpect(jsonPath("$.data.stock_list[0].zf").value(6.171428571428562))
+                // 按 turnover 降序首条：2026-04-08 成交额最大为 300308 中际旭创
+                .andExpect(jsonPath("$.data.stock_list[0].stock_code").value("300308"))
+                .andExpect(jsonPath("$.data.stock_list[0].change_pct").value(14.13))
+                .andExpect(jsonPath("$.data.stock_list[0].zf").value(11.074524236114478))
+                .andExpect(jsonPath("$.data.stock_list[0].ratio_pct").value(7.9))
                 // Verify block data mapping (zf as change_pct)
                 .andExpect(jsonPath("$.data.block_list[0].block_code").value("885530"))
                 .andExpect(jsonPath("$.data.block_list[0].zf").value(5.575))
@@ -45,8 +46,8 @@ public class IndicatorControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status_code").value(0))
                 .andExpect(jsonPath("$.data.update_time").value("2026-04-07 15:30"))
-                // Verify specific stock data for 2026-04-07
-                .andExpect(jsonPath("$.data.stock_list[0].stock_code").value("600010"))
-                .andExpect(jsonPath("$.data.stock_list[0].stock_name").value("包钢股份"));
+                .andExpect(jsonPath("$.data.stock_list[0].stock_code").value("300308"))
+                .andExpect(jsonPath("$.data.stock_list[0].stock_name").value("中际旭创"))
+                .andExpect(jsonPath("$.data.stock_list[0].ratio_pct").value(4.91));
     }
 }

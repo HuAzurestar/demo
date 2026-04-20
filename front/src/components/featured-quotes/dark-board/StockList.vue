@@ -20,6 +20,10 @@
             {{ formatWan(stock.main_listed_capital) }}
           </span>
         </div>
+        <div class="stock-list__cell">
+          <span class="stock-list__label">占比(%)</span>
+          <span class="stock-list__value ff-din">{{ formatRatioPct(stock.ratio_pct) }}</span>
+        </div>
       </template>
     </rank-item>
   </div>
@@ -44,6 +48,11 @@ const formatWan = (value: number | null) => {
   if (value === null) return '--';
   const sign = value > 0 ? '+' : '';
   return `${sign}${(value / INTEGER_10000).toFixed(INTEGER_2)}`;
+};
+
+const formatRatioPct = (value: number | null | undefined) => {
+  if (value == null || !Number.isFinite(value)) return '--';
+  return value.toFixed(INTEGER_2);
 };
 </script>
 

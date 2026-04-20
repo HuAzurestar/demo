@@ -5,6 +5,9 @@ export interface GreyRankStockItem {
   market: string;
   main_grey_capital: number;
   main_listed_capital: number;
+  turnover?: number;
+  /** main_listed_capital / turnover * 100，两位小数；非法时前端展示 -- */
+  ratio_pct?: number | null;
   change_pct: number;
   zhangdiefu?: number;
 }

@@ -13,6 +13,31 @@ const sendJson = (res, status, payload) => {
   res.end(JSON.stringify(payload));
 };
 
+/** 占比 = main_listed_capital / turnover * 100，保留两位小数；非法为 null */
+function computeRatioPct(mainListedCapital, turnover) {
+  if (mainListedCapital == null || turnover == null) return null;
+  if (!Number.isFinite(mainListedCapital) || !Number.isFinite(turnover)) return null;
+  if (turnover === 0) return null;
+  const raw = (mainListedCapital / turnover) * 100;
+  if (!Number.isFinite(raw)) return null;
+  return Math.round(raw * 100) / 100;
+}
+
+function enrichRatioAndSortStockList(payload) {
+  const list = payload?.data?.stock_list;
+  if (!Array.isArray(list)) return;
+  for (const row of list) {
+    row.ratio_pct = computeRatioPct(row.main_listed_capital, row.turnover);
+  }
+  list.sort((a, b) => {
+    const ta = a.turnover;
+    const tb = b.turnover;
+    if (ta == null || !Number.isFinite(ta)) return 1;
+    if (tb == null || !Number.isFinite(tb)) return -1;
+    return tb - ta;
+  });
+}
+
 const server = http.createServer((req, res) => {
   const pathname = new URL(req.url, `http://${req.headers.host}`).pathname;
 
@@ -24,7 +49,9 @@ const server = http.createServer((req, res) => {
         return;
       }
       try {
-        sendJson(res, 200, JSON.parse(content));
+        const payload = JSON.parse(content);
+        enrichRatioAndSortStockList(payload);
+        sendJson(res, 200, payload);
       } catch (e) {
         console.error('[server] parse data.json failed:', e);
         sendJson(res, 500, { status_code: -1, status_msg: 'invalid data.json' });
