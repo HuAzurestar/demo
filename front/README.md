@@ -55,16 +55,26 @@ pnpm lint           # eslint --fix
 
 ## 接口与代理
 
-接口走统一的 `@/apis/http`（axios 实例），错误统一上报。本地开发时，vite 把 `/api` 代理到本仓库的 `node-server`：
+接口走统一的 `@/apis/http`（axios 实例），错误统一上报。本地开发时，vite 把 `/indicator` 代理到本机后端服务：
 
 ```ts
-// vite.config.ts
+// vite.config.ts（节选）
 proxy: {
-  '/api': { target: 'http://127.0.0.1:3000', changeOrigin: true }
+  '/indicator': {
+    target: 'http://127.0.0.1:80',
+    changeOrigin: true,
+    secure: false
+  }
 }
 ```
 
-启动前端前先启动 `node-server`，详见根目录 README。
+启动前端前请先启动 `node-server` 或 `java-server`（二选一，默认 80 端口），详见根目录 README。
+
+当前 `FeaturedQuotes` 列表支持分页联动：
+- 请求参数：`pageNum`（1-based）、`pageSize`
+- 响应字段：`total`、`stock_list`
+- 页码导航：顶部/底部共享 `首页 | 上一页 | 页码窗口 | 下一页 | 末页`
+- 底部额外展示：`当前页/最大页`、`总数`、`每页大小` 切换（10/20/50）
 
 ## 设计约定
 
