@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": "node .cursor/hooks/pre-push-review.cjs",
+        "matcher": "git\\s+push",
+        "failClosed": true
+      }
+    ],
+    "afterFileEdit": [
+      {
+        "command": "cd java-server && mvn clean compile",
+        "matcher": "Write|TabWrite"
+      },
+      {
+        "command": "cd front && pnpm run lint",
+        "matcher": "Write|TabWrite"
+      },
+      {
+        "command": "cd node-server && node --check index.js",
+        "matcher": "Write|TabWrite"
+      },
+      {
+        "command": "git rev-parse --abbrev-ref HEAD",
+        "matcher": "Write|TabWrite"
+      }
+    ]
+  }
+}

@@ -10,5 +10,6 @@ lerna-debug.log*
 
 ./front/pnpm-lock.yaml
 ./java-server/target
+java-server/target/
 .idea
 .specstory

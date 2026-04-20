@@ -48,3 +48,15 @@ There is no test runner configured.
 - This is a **Vue 2.7** project — when generating components, use Composition API (`setup()` returning bindings) but stay on Vue 2 syntax (`Vue.extend`, options-style `props`/`emits` in `defineComponent`, no Vue 3-only APIs like `<script setup>` macros, `defineModel`, etc.).
 - Sizes in CSS should be authored in `px` against a 375-wide design and let postcss convert. Add `no-vw` class on elements that must stay pixel-perfect (e.g. 1px borders).
 - New API calls should go through `@/apis/http` so error reporting stays consistent.
+
+## Git Commit Requirements (Phase Commit Workflow)
+
+When requested to perform code commit (`git commit`) related operations, you must strictly adhere to the following phase-commit workflow:
+
+1. **Strict Branching Rule:** It is **strictly forbidden** to execute `git commit` directly on mainline or explicit project branches (e.g., `main`, `master`, `develop`, `dev`, `dev_hly`). If currently on a mainline branch, you must create and switch to a new branch prefixed with **`agent-`** using lowercase, hyphens, and slashes (e.g., `git checkout -b agent-feat/dark-plate-pagination`).
+2. **Pre-commit Quality Checks:** You must run project-defined hooks or quality checks (e.g., `pnpm run verify`, `mvn compile`, linting) before staging any files. If checks fail, you must stop the commit flow, fix the code/config, and re-run until green.
+3. **Intentional Staging & Garbage Control:** Always inspect `git status` before adding files. **Do not** stage temporary files, build artifacts (`target/`, `node_modules/`), or secrets (`.env`). Update `.gitignore` if untracked junk appears. Prefer explicit file paths with `git add` over `git add .` to ensure only intentional changes are staged.
+4. **Structured Commit Message:** You must use a single-line Conventional Commit format that includes the type, scope, and a concise description of the action and impact area: `<type>(<scope>): <short description>`. 
+   - **Allowed types:** `feat`, `fix`, `refactor`, `docs`, `chore`, `test`.
+   - **Example:** `feat(capital): add main capital percentage calculation and UI display`
+5. **Amend Safety Rule:** `git commit --amend` is only allowed when all conditions are true: (a) user explicitly requests amend, or the previous commit succeeded but hooks auto-modified files; (b) the target `HEAD` commit was created by the current Agent session; (c) commit has not been pushed to remote. If a commit failed/rejected, do **not** amend; fix issues and create a new commit instead.
