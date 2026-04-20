@@ -42,3 +42,18 @@ pnpm dev
 ```
 
 前端通过 Vite 代理 `/indicator` 到 `http://127.0.0.1:80`。联调时仅需启动一个后端（Node 或 Java），避免端口冲突。
+
+## 功能归档
+
+### 题目一（Java `grey_rank`）
+
+- `java-server` 的 `grey_rank` 在 `data.stock_list` 增加 `ratio_pct` 字段。
+- `ratio_pct` 计算规则：`main_listed_capital / turnover * 100`，保留 2 位小数。
+- `stock_list` 按 `turnover` 降序输出；异常值（空值、非数值、除数为 0）返回 `null`，前端显示 `--`。
+- 题目一最终以 Java 为准，`node-server` 保持读取并原样返回 `data.json`。
+
+### 题目二（全栈分页）
+
+- `grey_rank` 支持 `pageNum`（1-based）和 `pageSize` 参数。
+- 响应增加 `total`，并在 `stock_list` 每条记录返回全量序号 `index`。
+- 前端分页导航支持：`首页/上一页/下一页/末页` 与 `当前页前后 3 页` 的页码窗口，顶部和底部导航保持一致。
