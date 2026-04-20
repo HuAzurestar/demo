@@ -11,6 +11,7 @@ import java.util.List;
 public class IndicatorRankData {
     @JsonProperty("stock_list")
     private List<StockRankDTO> stockList;
+    private Long total;
     @JsonProperty("block_list")
     private List<BlockRankDTO> blockList;
     @JsonProperty("update_time")
@@ -19,6 +20,8 @@ public class IndicatorRankData {
     // Getters and Setters
     public List<StockRankDTO> getStockList() { return stockList; }
     public void setStockList(List<StockRankDTO> stockList) { this.stockList = stockList; }
+    public Long getTotal() { return total; }
+    public void setTotal(Long total) { this.total = total; }
     public List<BlockRankDTO> getBlockList() { return blockList; }
     public void setBlockList(List<BlockRankDTO> blockList) { this.blockList = blockList; }
     public String getUpdateTime() { return updateTime; }

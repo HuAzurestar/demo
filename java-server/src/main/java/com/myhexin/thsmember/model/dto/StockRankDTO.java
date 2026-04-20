@@ -23,6 +23,7 @@ public class StockRankDTO {
     @JsonProperty("change_pct")
     private Double changePct;
     private Double zf;
+    private Integer index;
 
     // Getters and Setters
     public String getStockCode() { return stockCode; }
@@ -45,4 +46,6 @@ public class StockRankDTO {
     public void setChangePct(Double changePct) { this.changePct = changePct; }
     public Double getZf() { return zf; }
     public void setZf(Double zf) { this.zf = zf; }
+    public Integer getIndex() { return index; }
+    public void setIndex(Integer index) { this.index = index; }
 }

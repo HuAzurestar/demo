@@ -19,19 +19,49 @@ import java.util.*;
  */
 @Service
 public class IndicatorServiceImpl implements IndicatorService {
+    private static final int DEFAULT_PAGE_NUM = 1;
+    private static final int DEFAULT_PAGE_SIZE = 20;
 
     @Override
-    public IndicatorRankData getIndicatorRankings(String date) {
+    public IndicatorRankData getIndicatorRankings(String date, Integer pageNum, Integer pageSize) {
         String targetDate = date;
         if (!StringUtils.hasText(targetDate)) {
             targetDate = getLatestDate();
         }
 
+        int safePageNum = pageNum == null || pageNum < 1 ? DEFAULT_PAGE_NUM : pageNum;
+        int safePageSize = pageSize == null || pageSize < 1 ? DEFAULT_PAGE_SIZE : pageSize;
+
+        List<StockRankDTO> allStocks = loadStocks(targetDate);
+        long total = allStocks.size();
+        List<StockRankDTO> pagedStocks = paginateStocks(allStocks, safePageNum, safePageSize);
+        fillAbsoluteIndex(pagedStocks, safePageNum, safePageSize);
+
         IndicatorRankData data = new IndicatorRankData();
-        data.setStockList(loadStocks(targetDate));
+        data.setTotal(total);
+        data.setStockList(pagedStocks);
         data.setBlockList(loadBlocks(targetDate));
         data.setUpdateTime(loadMetadata(targetDate));
         return data;
+    }
+
+    private List<StockRankDTO> paginateStocks(List<StockRankDTO> allStocks, int pageNum, int pageSize) {
+        if (allStocks.isEmpty()) {
+            return new ArrayList<>();
+        }
+        int offset = (pageNum - 1) * pageSize;
+        if (offset >= allStocks.size()) {
+            return new ArrayList<>();
+        }
+        int toIndex = Math.min(offset + pageSize, allStocks.size());
+        return new ArrayList<>(allStocks.subList(offset, toIndex));
+    }
+
+    private void fillAbsoluteIndex(List<StockRankDTO> pagedStocks, int pageNum, int pageSize) {
+        int offset = (pageNum - 1) * pageSize;
+        for (int i = 0; i < pagedStocks.size(); i++) {
+            pagedStocks.get(i).setIndex(offset + i + 1);
+        }
     }
 
     private String getLatestDate() {

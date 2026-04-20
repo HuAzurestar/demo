@@ -3,7 +3,7 @@
     <rank-item
       v-for="(stock, index) in data"
       :key="stock.stock_code"
-      :rank="index"
+      :rank="formatRank(stock, index)"
       :title="stock.stock_name"
       @click="$emit('item-click', stock)"
     >
@@ -44,6 +44,13 @@ const formatWan = (value: number | null) => {
   if (value === null) return '--';
   const sign = value > 0 ? '+' : '';
   return `${sign}${(value / INTEGER_10000).toFixed(INTEGER_2)}`;
+};
+
+const formatRank = (stock: GreyRankStockItem, fallbackIndex: number) => {
+  if (typeof stock.index === 'number' && stock.index > 0) {
+    return stock.index - 1;
+  }
+  return fallbackIndex;
 };
 </script>
 
