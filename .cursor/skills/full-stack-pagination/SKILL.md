@@ -3,7 +3,8 @@ name: full-stack-pagination
 description: >-
   Implement full-stack pagination for Vue frontend and Java backend.
   Includes page number/page size conventions, total count handling, boundary
-  behavior, backend query pagination, and frontend pagination state + controls.
+  behavior, backend query pagination, record index field, frontend rich pager
+  controls, and comprehensive Java tests.
 ---
 
 # Full-Stack Pagination Implementation (全栈分页实现)
@@ -19,6 +20,7 @@ Although examples below use Vue + Java, the same pagination contract should be e
 - Backend response must include:
   - `total` (total number of records)
   - current-page list field (e.g. `list`, `stock_list`)
+- Backend page item should include an `index` field (1-based absolute index in full dataset).
 
 ## 2) Backend rules (Java example)
 
@@ -37,6 +39,15 @@ Apply these in Controller + Service (or Mapper/Repository):
 4. Response shape:
    - Include `total` (Long)
    - Include business list field (e.g. `stock_list`)
+   - Include per-item `index` field
+5. `index` rule:
+   - For each item in current page:
+     - `index = offset + localPosition + 1`
+     - `localPosition` starts from `0`
+6. GET verification after implementation:
+   - `total` must be present and correct.
+   - Returned list length must never exceed `pageSize`.
+   - If requested page is **not** the last page, returned length must equal `pageSize`.
 
 ## 3) Frontend rules (Vue example)
 
@@ -55,10 +66,21 @@ UI requirements:
 
 - Add a pagination area below the list.
 - Support page-size switching (`10/20/50`).
-- Support previous/next navigation.
+- Show `currentPage / maxPage`.
+- Support first / previous / next / last navigation.
+- Support number-window navigation with explicit rules:
+  - Always include page `1` and `maxPage` as anchors (when `maxPage > 1`).
+  - Show a centered window around `currentPage`: `[currentPage-3, currentPage+3]`.
+  - Clamp the window into `[2, maxPage-1]`.
+  - Render left ellipsis (`...`) if window start `> 2`.
+  - Render right ellipsis (`...`) if window end `< maxPage - 1`.
+  - Example patterns:
+    - Head area: `1 2 3 4 ... 79`
+    - Middle area: `1 ... 15 16 17 18(current) 19 20 21 ... 79`
+    - Tail area: `1 ... 76 77 78 79`
 - Disable boundary actions:
-  - disable prev when `currentPage <= 1`
-  - disable next when `currentPage >= Math.ceil(total / pageSize)`
+  - disable `first` + `prev` when `currentPage <= 1`
+  - disable `next` + `last` when `currentPage >= maxPage`
 
 Reactive behavior:
 
@@ -69,15 +91,38 @@ Reactive behavior:
 ## 4) Execution checklist
 
 1. Add pagination request/response DTOs (or extend existing DTOs).
-2. Update backend query flow to compute `total` + `offset/limit`.
-3. Update frontend API declaration to pass pagination params.
-4. Add page state + pagination UI + handlers in the target view/component.
-5. Verify boundary scenarios:
+2. Update backend query flow to compute `total` + `offset/limit` and inject `index`.
+3. Run GET checks for `total`, page size upper bound, and non-last-page exact-size behavior.
+4. Update frontend API declaration to pass pagination params.
+5. Add page state + pagination UI + handlers in the target view/component.
+6. Verify boundary scenarios:
    - first page / last page
    - total = 0
    - oversized `pageNum`
+   - page number window rendering (`...`) correctness
+   - first/last button behavior
 
-## 5) Output quality requirements
+## 5) Java test requirements (mandatory)
+
+Add/extend tests to cover all pagination behavior:
+
+1. Basic pagination:
+   - default request returns `total` and list length `<= pageSize`.
+2. Exact page size for non-last pages:
+   - when `pageNum` is not last page, list length must equal `pageSize`.
+3. Last page behavior:
+   - list length can be `< pageSize`.
+4. Oversized page:
+   - empty list with correct `total`.
+5. Empty dataset:
+   - `total = 0`, empty list.
+6. `index` correctness:
+   - verify first item index on page 1 and page N.
+   - verify monotonic increment within one page.
+7. Navigation-related contract:
+   - ensure max page math (`ceil(total/pageSize)`) is consistent with returned data.
+
+## 6) Output quality requirements
 
 - Keep pagination contract consistent across endpoints.
 - Avoid breaking existing business fields.
