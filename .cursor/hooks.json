@@ -1,33 +1,23 @@
 {
-    "version": "1",
-    "hooks": [
+  "version": 1,
+  "hooks": {
+    "afterFileEdit": [
       {
-        "id": "java-compile-check",
-        "name": "Java 后端编译与规范检查",
-        "description": "每次 Agent 修改 java-server 目录下的代码后触发，确保没有低级语法错误。",
-        "events": ["post-agent-generation"],
-        "command": "cd java-server && mvn clean compile" 
+        "command": "cd java-server && mvn clean compile",
+        "matcher": "Write|TabWrite"
       },
       {
-        "id": "vue-lint-check",
-        "name": "Vue 前端 ESLint",
-        "description": "每次 Agent 修改 front 目录下的代码后触发，运行 eslint --fix。",
-        "events": ["post-agent-generation"],
-        "command": "cd front && pnpm run lint"
+        "command": "cd front && pnpm run lint",
+        "matcher": "Write|TabWrite"
       },
       {
-        "id": "node-syntax-check",
-        "name": "Node mock 语法检查",
-        "description": "每次 Agent 修改 node-server 目录下的代码后触发，避免低级语法错误。",
-        "events": ["post-agent-generation"],
-        "command": "cd node-server && node --check index.js"
+        "command": "cd node-server && node --check index.js",
+        "matcher": "Write|TabWrite"
       },
       {
-        "id": "git-amend-policy-check",
-        "name": "Git amend 安全规则提示",
-        "description": "提交/修订相关操作必须遵守：仅在 agent-* 分支进行；--amend 仅可用于用户明确要求或 hooks 自动改写后的最近一次 Agent 本地未推送提交；提交失败时禁止 amend，必须新建 commit。",
-        "events": ["post-agent-generation"],
-        "command": "git rev-parse --abbrev-ref HEAD"
+        "command": "git rev-parse --abbrev-ref HEAD",
+        "matcher": "Write|TabWrite"
       }
     ]
   }
+}
