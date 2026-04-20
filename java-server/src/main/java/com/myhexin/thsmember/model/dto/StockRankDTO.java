@@ -26,6 +26,7 @@ public class StockRankDTO {
     /** main_listed_capital / turnover * 100，保留两位小数；非法时为 null */
     @JsonProperty("ratio_pct")
     private Double ratioPct;
+    private Integer index;
 
     // Getters and Setters
     public String getStockCode() { return stockCode; }
@@ -50,4 +51,6 @@ public class StockRankDTO {
     public void setZf(Double zf) { this.zf = zf; }
     public Double getRatioPct() { return ratioPct; }
     public void setRatioPct(Double ratioPct) { this.ratioPct = ratioPct; }
+    public Integer getIndex() { return index; }
+    public void setIndex(Integer index) { this.index = index; }
 }
