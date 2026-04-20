@@ -70,6 +70,10 @@ proxy: {
 
 启动前端前请先在 **80** 端口启动 **`node-server`（mock）** 或 **`java-server`**，详见根目录 README。
 
+暗盘榜页面（`views/FeaturedQuotes.vue`）当前依赖后端 `grey_rank` 的 `stock_list` 额外字段：
+- `ratio_pct`：由后端计算并返回，含义为 `main_listed_capital / turnover * 100`（2 位小数）。
+- 页面 `StockList` 会新增「占比(%)」列；当字段为空或非法时展示 `--`。
+
 ## 设计约定
 
 - **组件设计**：通用组件保持纯展示（如 `RankItem` 通过 `@click` 抛事件，不感知业务跳转）；数据获取与跳转放在页面层（`views/`）；卡片容器统一用 `BoardCard`。
