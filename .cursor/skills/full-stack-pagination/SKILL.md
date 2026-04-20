@@ -64,23 +64,34 @@ API call requirements:
 
 UI requirements:
 
-- Add a pagination area below the list.
-- Support page-size switching (`10/20/50`).
-- Show `currentPage / maxPage`.
-- Support first / previous / next / last navigation.
-- Support number-window navigation with explicit rules:
+- **Pagination Layout & Placement:**
+  - Render pagination controls in both the **top** and **bottom** areas of the list.
+  - **Shared Navigation Bar (Top & Bottom):** Both areas must render the identical navigation flow: `First | Previous | Number Window | Next | Last`.
+  - **Bottom-Only Status Row:** Only the bottom area should include an additional row showing: `Current Page / Max Page`, `Total Items`, and the `Page-size selector`.
+
+- **Shared Navigation Bar Rules (Top & Bottom):**
+  - Example target layout: `First | Prev | 1 ... 3 4 5 6(current) 7 8 9 ... 79 | Next | Last`
+  - Both bars must share identical page data, state, and click behaviors.
+  - Disable boundary actions:
+    - Disable `first` and `prev` buttons when `currentPage <= 1`.
+    - Disable `next` and `last` buttons when `currentPage >= maxPage`.
+
+- **Number-Window Navigation Rules:**
   - Always include page `1` and `maxPage` as anchors (when `maxPage > 1`).
   - Show a centered window around `currentPage`: `[currentPage-3, currentPage+3]`.
-  - Clamp the window into `[2, maxPage-1]`.
-  - Render left ellipsis (`...`) if window start `> 2`.
-  - Render right ellipsis (`...`) if window end `< maxPage - 1`.
+  - The page-number UI must render numbers on **both sides** of the current page whenever available. Minimum expectation in middle pages: at least 3 numbers before and 3 numbers after the current page.
+  - Clamp the dynamic window strictly into `[2, maxPage-1]`.
+  - Render a left ellipsis (`...`) if the window start is `> 2`.
+  - Render a right ellipsis (`...`) if the window end is `< maxPage - 1`.
   - Example patterns:
-    - Head area: `1 2 3 4 ... 79`
-    - Middle area: `1 ... 15 16 17 18(current) 19 20 21 ... 79`
-    - Tail area: `1 ... 76 77 78 79`
-- Disable boundary actions:
-  - disable `first` + `prev` when `currentPage <= 1`
-  - disable `next` + `last` when `currentPage >= maxPage`
+    - Head area: `1(current) 2 3 4 ... 79`
+    - Middle area: `1 ... 3 4 5 6(current) 7 8 9 ... 79`
+    - Tail area: `1 ... 76 77 78 79(current)`
+
+- **Bottom-Only Status Row Rules:**
+  - Support page-size switching with explicitly defined options (e.g., `10`, `20`, `50`), visually indicating the currently selected size.
+  - Display the `currentPage / maxPage` ratio.
+  - Display the total count of items.
 
 Reactive behavior:
 

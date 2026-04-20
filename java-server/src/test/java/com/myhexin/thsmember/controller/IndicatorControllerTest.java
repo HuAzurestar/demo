@@ -99,4 +99,16 @@ public class IndicatorControllerTest {
                 .andExpect(jsonPath("$.data.stock_list[0].index").value(11))
                 .andExpect(jsonPath("$.data.stock_list[9].index").value(20));
     }
+
+    @Test
+    public void testPaginationEmptyDataset() throws Exception {
+        mockMvc.perform(get("/indicator/capital/v1/grey_rank")
+                        .param("date", "1900-01-01")
+                        .param("pageNum", "1")
+                        .param("pageSize", "20"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status_code").value(0))
+                .andExpect(jsonPath("$.data.total").value(0))
+                .andExpect(jsonPath("$.data.stock_list", hasSize(0)));
+    }
 }

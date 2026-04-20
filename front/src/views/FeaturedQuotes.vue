@@ -3,6 +3,22 @@
     <div class="quotes-board-wrap">
       <div class="quotes-card-wrap">
         <board-card title="榜单" :loading="loading" :is-empty="isEmpty">
+          <div class="pagination-nav">
+            <button class="pagination-nav__btn" :disabled="isFirstPage" @click="goFirst">首页</button>
+            <button class="pagination-nav__btn" :disabled="isFirstPage" @click="goPrev">上一页</button>
+            <button
+              v-for="item in pageItems"
+              :key="`top-${item.key}`"
+              class="pagination-nav__page"
+              :class="{ 'is-active': item.type === 'page' && item.value === currentPage, 'is-gap': item.type === 'ellipsis' }"
+              :disabled="item.type !== 'page' || item.value === currentPage"
+              @click="onPageClick(item)"
+            >
+              {{ item.label }}
+            </button>
+            <button class="pagination-nav__btn" :disabled="isLastPage" @click="goNext">下一页</button>
+            <button class="pagination-nav__btn" :disabled="isLastPage" @click="goLast">末页</button>
+          </div>
           <stock-list :data="stocks" @item-click="onStockClick" />
           <div class="pagination-wrap">
             <div class="pagination-summary">
@@ -26,7 +42,7 @@
               <button class="pagination-nav__btn" :disabled="isFirstPage" @click="goPrev">上一页</button>
               <button
                 v-for="item in pageItems"
-                :key="item.key"
+                :key="`bottom-${item.key}`"
                 class="pagination-nav__page"
                 :class="{ 'is-active': item.type === 'page' && item.value === currentPage, 'is-gap': item.type === 'ellipsis' }"
                 :disabled="item.type !== 'page' || item.value === currentPage"
@@ -215,6 +231,9 @@ onMounted(fetchBoard);
   align-items: center;
   flex-wrap: wrap;
   gap: 6px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .pagination-nav__btn,
